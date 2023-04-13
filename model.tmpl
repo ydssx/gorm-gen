@@ -15,7 +15,7 @@ type {{.Name | Lower}}Model struct {
 }
 
 func New{{.Name | Title}}Model(tx *gorm.DB) *{{.Name | Lower}}Model {
-	db := tx.Table("{{.Name}}").Model(&{{.Name | Title}}{})
+	db := tx.Table("{{.TableName}}").Model(&{{.Name | Title}}{})
 	return &{{.Name | Lower}}Model{db: db}
 }
 
