@@ -5,8 +5,7 @@ import "gorm.io/gorm"
 // {{.TableName}} {{.TableComment}}
 type {{.Name | Title}} struct {
 	BaseModel
-	{{range .Fields}}
-	{{.Name | Title | CamelCase}} {{.Type}} {{.Tag}} //{{.Comment}}
+	{{range .Fields}}{{.Name | Title | CamelCase}} {{.Type}} {{.Tag}} //{{.Comment}}
 	{{end}}
 }
 
