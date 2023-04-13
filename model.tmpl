@@ -25,7 +25,7 @@ func (m *{{.Name | Lower}}Model) SetId(id int) *{{.Name | Lower}}Model {
 }
 
 func (m *{{.Name | Lower}}Model) Create({{.Name | Lower}} {{.Name | Title | Title}}) error {
-	return m.db.Create(&{{.Name | Title}}).Error
+	return m.db.Create(&{{.Name | Lower}}).Error
 }
 
 func (m *{{.Name | Lower}}Model) FirstOne() (data {{.Name | Title}}, err error) {
