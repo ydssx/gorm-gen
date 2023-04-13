@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"strings"
+
+	"github.com/xwb1989/sqlparser"
 )
 
 type Table struct {
@@ -136,4 +138,32 @@ func generateStructTag(field Field) (tag string) {
 		tag += fmt.Sprintf("`json:\"%s\" gorm:\"%s\"`", field.Name, strings.Join(tags, ";"))
 	}
 	return tag
+}
+
+func ParseSQL1(sql string) (*Table, error) {
+	stmt, err := sqlparser.Parse(sql)
+	if err != nil {
+		panic(err)
+	}
+
+	createStmt, ok := stmt.(*sqlparser.DDL)
+	if !ok || createStmt.Action != "create" {
+		return nil, fmt.Errorf("invalid create statement")
+	}
+	table := new(Table)
+	table.Name = createStmt.NewName.Name.String()
+	// fmt.Printf("Table Name: %s\n", tableName)
+	columns := createStmt.TableSpec.Columns
+	for _, col := range columns {
+		field := Field{}
+		field.Comment = string(col.Type.Comment.Val)
+		if col.Type.Default != nil {
+			field.Default = string(col.Type.Default.Val)
+		}
+		field.Name = col.Name.String()
+		field.Nullable = bool(col.Type.NotNull)
+		field.Type = col.Type.Type
+		table.Fields = append(table.Fields, field)
+	}
+	return table, nil
 }
