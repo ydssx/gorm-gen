@@ -1,0 +1,53 @@
+package model
+
+import "gorm.io/gorm"
+
+// {{.TableName}} {{.TableComment}}
+type {{.Name | Title}} struct {
+	BaseModel
+	{{range .Fields}}
+	{{.Name | Title}} {{.Type}} {{.Tag}} //{{.Comment}}
+	{{end}}
+}
+
+type {{.Name | Lower}}Model struct {
+	db *gorm.DB
+}
+
+func New{{.Name | Title}}Model(tx *gorm.DB) *{{.Name | Lower}}Model {
+	db := tx.Table("{{.Name}}").Model(&{{.Name | Title}}{})
+	return &{{.Name | Lower}}Model{db: db}
+}
+
+func (m *{{.Name | Lower}}Model) SetId(id int) *{{.Name | Lower}}Model {
+	m.db = m.db.Where("id = ?", id)
+	return m
+}
+
+func (m *{{.Name | Lower}}Model) Create({{.Name | Title}} {{.Name | Title | Title}}) error {
+	return m.db.Create(&{{.Name | Title}}).Error
+}
+
+func (m *{{.Name | Lower}}Model) FirstOne() (data {{.Name | Title}}, err error) {
+	err = m.db.First(&data).Error
+	return
+}
+
+func (m *{{.Name | Lower}}Model) LastOne() (data {{.Name | Title}}, err error) {
+	err = m.db.Last(&data).Error
+	return
+}
+
+func (m *{{.Name | Lower}}Model) DeleteById(id int) error {
+	return m.db.Where("id = ?", id).Delete(&{{.Name | Title}}{}).Error
+}
+
+func (m *{{.Name | Lower}}Model) List(limit, offset int) (data []{{.Name | Title}}, total int64, err error) {
+	query := m.db.Model(&{{.Name | Title}}{})
+	err = query.Count(&total).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	err = query.Limit(limit).Offset(offset).Find(&data).Error
+	return
+}
