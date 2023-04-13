@@ -11,25 +11,15 @@ import (
 )
 
 func main() {
-	sql := `CREATE TABLE users (
-		id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-		username VARCHAR(50) NOT NULL COMMENT '用户名',
-		password VARCHAR(100) NOT NULL COMMENT '密码',
-		email VARCHAR(50) NOT NULL COMMENT '邮箱',
-		phone VARCHAR(20) NOT NULL COMMENT '电话',
-		PRIMARY KEY (id),
-		UNIQUE KEY idx_users_username (username),
-		UNIQUE KEY idx_users_email (email),
-		UNIQUE KEY idx_users_phone (phone)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用户表';`
-	table, err := ParseSQL(sql)
+	sql, _ := ioutil.ReadFile("sql.text")
+	table, err := ParseSQL(string(sql))
 	if err != nil {
 		log.Print("failed to parse sql:", err)
 		return
 	}
 
 	modelTemplate, _ := ioutil.ReadFile("model.tmpl")
-	funcMap := template.FuncMap{"Title": strings.Title, "Lower": toLowerFirst}
+	funcMap := template.FuncMap{"Title": strings.Title, "Lower": toLowerFirst, "CamelCase": UnderscoreToCamelCase}
 	// 解析模板
 	tmpl, err := template.New("model").Funcs(funcMap).Parse(string(modelTemplate))
 	if err != nil {

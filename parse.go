@@ -29,6 +29,7 @@ func ParseSQL(sql string) (*Table, error) {
 	tableNameStart := strings.Index(sql, "CREATE TABLE ") + 13
 	tableNameEnd := strings.Index(sql[tableNameStart:], " ")
 	table.Name = sql[tableNameStart : tableNameStart+tableNameEnd]
+	table.Name = strings.ReplaceAll(table.Name, "`", "")
 
 	// Extract table comment
 	commentStart := strings.Index(sql, "COMMENT='") + 9
@@ -38,7 +39,7 @@ func ParseSQL(sql string) (*Table, error) {
 	lines := strings.Split(sql, "\n")
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "CREATE TABLE") {
+		if strings.HasPrefix(line, "CREATE TABLE") || strings.HasPrefix(line, "KEY") {
 			continue
 		} else if strings.HasPrefix(line, ") ENGINE=") {
 			break
@@ -97,6 +98,7 @@ func getField(line string) Field {
 	field := Field{}
 	tokens := strings.Split(line, " ")
 	field.Name = strings.TrimSuffix(tokens[0], ",")
+	field.Name = strings.ReplaceAll(field.Name, "`", "")
 	field.Type = getType(tokens[1])
 	if strings.Contains(line, "NOT NULL") {
 		field.Nullable = false
@@ -104,9 +106,8 @@ func getField(line string) Field {
 		field.Nullable = true
 	}
 	if strings.Contains(line, "DEFAULT") {
-		start := strings.Index(line, "DEFAULT '") + 9
-		end := strings.Index(line[start:], "'") + start
-		field.Default = line[start:end]
+		start := strings.Index(line, "DEFAULT ") + 8
+		field.Default = strings.Split(line[start:], " ")[0]
 	}
 	if strings.Contains(line, "COMMENT") {
 		start := strings.Index(line, "COMMENT '") + 9

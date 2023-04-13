@@ -2,6 +2,7 @@ package main
 
 import (
 	"strings"
+	"unicode"
 
 	"github.com/jinzhu/inflection"
 )
@@ -11,7 +12,7 @@ func getType(token string) string {
 	switch {
 	case strings.HasPrefix(token, "bigint"):
 		return "int64"
-	case strings.HasPrefix(token, "int"):
+	case strings.HasPrefix(token, "int"), strings.HasPrefix(token, "tinyint"):
 		return "int"
 	case strings.HasPrefix(token, "tinyint(1)"):
 		return "bool"
@@ -23,6 +24,8 @@ func getType(token string) string {
 		return "float32"
 	case strings.HasPrefix(token, "timestamp"), strings.HasPrefix(token, "datetime"):
 		return "time.Time"
+	case strings.HasPrefix(token, "json"):
+		return "json.RawMessage"
 	default:
 		return token
 	}
@@ -45,4 +48,28 @@ func toLowerFirst(s string) string {
 		return ""
 	}
 	return strings.ToLower(s[0:1]) + s[1:]
+}
+
+// 下划线转驼峰
+func UnderscoreToCamelCase(s string) string {
+	var (
+		b  strings.Builder
+		up bool
+	)
+
+	for _, c := range s {
+		if c == '_' {
+			up = true
+			continue
+		}
+
+		if up {
+			b.WriteRune(unicode.ToUpper(c))
+			up = false
+		} else {
+			b.WriteRune(c)
+		}
+	}
+
+	return b.String()
 }
