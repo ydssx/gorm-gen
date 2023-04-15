@@ -34,14 +34,16 @@ func ParseSQL(sql string) (*Table, error) {
 	table.Name = strings.ReplaceAll(table.Name, "`", "")
 
 	// Extract table comment
-	commentStart := strings.Index(sql, "COMMENT='") + 9
-	commentEnd := strings.Index(sql[commentStart:], "'")
-	table.Comment = sql[commentStart : commentStart+commentEnd]
+	if strings.Contains(sql, "COMMENT='") {
+		commentStart := strings.Index(sql, "COMMENT='") + 9
+		commentEnd := strings.Index(sql[commentStart:], "'")
+		table.Comment = sql[commentStart : commentStart+commentEnd]
+	}
 
 	lines := strings.Split(sql, "\n")
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "CREATE TABLE") || strings.HasPrefix(line, "KEY") {
+		if strings.HasPrefix(line, "CREATE TABLE") || strings.HasPrefix(line, "KEY") || strings.HasPrefix(line, ")") {
 			continue
 		} else if strings.HasPrefix(line, ") ENGINE=") {
 			break
