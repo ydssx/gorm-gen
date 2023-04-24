@@ -1,0 +1,14 @@
+# config.yaml
+
+database:
+  host: localhost
+  port: 3306
+  username: root
+  password: 965213
+  name: gva
+
+output: ./model
+
+tables:
+  - sys_users
+  - terminals

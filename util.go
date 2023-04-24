@@ -12,7 +12,7 @@ func getType(token string) string {
 	switch {
 	case strings.HasPrefix(token, "bigint"):
 		return "int64"
-	case strings.HasPrefix(token, "int"), strings.HasPrefix(token, "tinyint"):
+	case strings.HasPrefix(token, "int"), strings.HasPrefix(token, "tinyint"), strings.HasPrefix(token, "smallint"):
 		return "int"
 	case strings.HasPrefix(token, "tinyint(1)"):
 		return "bool"
