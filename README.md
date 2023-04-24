@@ -16,30 +16,17 @@ go install github.com/ydssx/gorm-gen
 
 ```yaml
 database:
-  host: "localhost"
+  host: localhost
   port: 3306
-  name: "test"
-  user: "root"
-  password: "password"
-output:
-  path: "./models"
-  package: "models"
-models:
-  - name: "user"
-    table: "users"
-    fields:
-      - name: "id"
-        type: "uint"
-        tag: "primary_key"
-        comment: "user id"
-      - name: "name"
-        type: "string"
-        tag: "not null"
-        comment: "user name"
-      - name: "email"
-        type: "string"
-        tag: "unique_index"
-        comment: "user email"
+  username: root
+  password: 965213
+  name: gva
+
+output: ./model
+
+tables:
+  - sys_users
+  - terminals
 ```
 
 Here is the meaning of each field:
