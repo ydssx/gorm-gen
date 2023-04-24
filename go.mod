@@ -1,4 +1,4 @@
-module gorm-gen
+module github.com/ydssx/gorm-gen
 
 go 1.20
 
