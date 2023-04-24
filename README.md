@@ -7,7 +7,7 @@
 You can install `gorm-gen` using `go get`:
 
 ```bash
-go get github.com/username/gorm-gen
+go get github.com/ydssx/gorm-gen
 ```
 
 ## Usage
