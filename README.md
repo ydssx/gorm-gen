@@ -40,14 +40,9 @@ Here is the meaning of each field:
 - `output`: the output directory and package name.
   - `path`: the output directory.
   - `package`: the package name.
-- `models`: the list of models to be generated.
-  - `name`: the name of the model.
+- `tables`: the list of models to be generated.
   - `table`: the name of the database table.
-  - `fields`: the list of fields in the model.
-    - `name`: the name of the field.
-    - `type`: the data type of the field.
-    - `tag`: the GORM tag of the field.
-    - `comment`: the comment of the field.
+  
 
 After creating the configuration file, you can run `gorm-gen` using the following command:
 
