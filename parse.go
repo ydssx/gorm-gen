@@ -116,7 +116,7 @@ func getField(line string) Field {
 	}
 	if strings.Contains(line, "DEFAULT") {
 		start := strings.Index(line, "DEFAULT ") + 8
-		field.Default = strings.Split(line[start:], " ")[0]
+		field.Default = strings.TrimRight(strings.Split(line[start:], " ")[0], ",")
 	}
 	if strings.Contains(line, "COMMENT") {
 		start := strings.Index(line, "COMMENT '") + 9
