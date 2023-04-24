@@ -30,6 +30,10 @@ func (m *{{.Name | Lower}}Model) Create({{.Name | Lower}} {{.Name | Title | Titl
 	return m.db.Create(&{{.Name | Lower}}).Error
 }
 
+func (m *{{.Name | Lower}}Model) Updates(values interface{}) error {
+	return m.db.Updates(values).Error
+}
+
 func (m *{{.Name | Lower}}Model) FirstOne() (data {{.Name | Title}}, err error) {
 	err = m.db.Take(&data).Error
 	return
