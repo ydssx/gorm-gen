@@ -21,12 +21,17 @@ func (m *{{.Name | Lower}}Model) SetId(id int) *{{.Name | Lower}}Model {
 	return m
 }
 
+func (m *{{.Name | Lower}}Model) Order(expr string) *{{.Name | Lower}}Model {
+	m.db = m.db.Order(expr)
+	return m
+}
+
 func (m *{{.Name | Lower}}Model) Create({{.Name | Lower}} {{.Name | Title | Title}}) error {
 	return m.db.Create(&{{.Name | Lower}}).Error
 }
 
 func (m *{{.Name | Lower}}Model) FirstOne() (data {{.Name | Title}}, err error) {
-	err = m.db.First(&data).Error
+	err = m.db.Take(&data).Error
 	return
 }
 

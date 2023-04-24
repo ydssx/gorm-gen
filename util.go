@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"strings"
 	"unicode"
 
@@ -81,4 +82,12 @@ func SliceContain(s []string, elem string) bool {
 		}
 	}
 	return false
+}
+
+func DirExists(dir string) bool {
+	fi, err := os.Stat(dir)
+	if err != nil {
+		return false
+	}
+	return fi.IsDir()
 }

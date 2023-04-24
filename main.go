@@ -7,6 +7,7 @@ import (
 	"go/format"
 	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 	"text/template"
 
@@ -42,6 +43,10 @@ func main() {
 		log.Fatalf("failed to parse config file: %v", err)
 	}
 
+	if !DirExists(config.Output) {
+		os.MkdirAll(config.Output, 0755)
+	}
+
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.DataBase.Username, config.DataBase.Password, config.DataBase.Host, config.DataBase.Port, config.DataBase.Name)
 	db, err := gorm.Open(mysql.Open(dsn))
 	if err != nil {
@@ -56,11 +61,11 @@ func main() {
 			log.Fatalf("failed to get sql: %v", err)
 		}
 
-		generate(createSQL)
+		generate(createSQL, config.Output)
 	}
 }
 
-func generate(createSQL string) {
+func generate(createSQL, outPath string) {
 	table, err := ParseSQL(createSQL)
 	if err != nil {
 		log.Print("failed to parse sql:", err)
@@ -97,7 +102,7 @@ func generate(createSQL string) {
 	}
 
 	// 将生成的代码写入文件
-	if err := ioutil.WriteFile(fmt.Sprintf("model/%s.go", strings.ToLower(table.Name)), formattedCode, 0644); err != nil {
+	if err := ioutil.WriteFile(fmt.Sprintf("%s/%s.go", outPath, strings.ToLower(table.Name)), formattedCode, 0644); err != nil {
 		fmt.Println("failed to write code to file:", err)
 		return
 	}
