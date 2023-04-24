@@ -7,7 +7,7 @@
 You can install `gorm-gen` using `go get`:
 
 ```bash
-go get github.com/ydssx/gorm-gen
+go install github.com/ydssx/gorm-gen
 ```
 
 ## Usage
@@ -65,7 +65,7 @@ Here is the meaning of each field:
 After creating the configuration file, you can run `gorm-gen` using the following command:
 
 ```bash
-gorm-gen -config=config.yaml
+gorm-gen -c config.yaml
 ```
 
 This will generate Golang code for the specified models in the output directory.
