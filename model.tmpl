@@ -9,9 +9,7 @@ type {{.Name | Title}} struct {
 	{{end}}
 }
 
-type {{.Name | Lower}}Model struct {
-	db *gorm.DB
-}
+type {{.Name | Lower}}Model DB
 
 func New{{.Name | Title}}Model(tx *gorm.DB) *{{.Name | Lower}}Model {
 	db := tx.Table("{{.TableName}}").Model(&{{.Name | Title}}{})

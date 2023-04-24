@@ -73,3 +73,12 @@ func UnderscoreToCamelCase(s string) string {
 
 	return b.String()
 }
+
+func SliceContain(s []string, elem string) bool {
+	for _, v := range s {
+		if v == elem {
+			return true
+		}
+	}
+	return false
+}

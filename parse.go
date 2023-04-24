@@ -24,6 +24,8 @@ type Field struct {
 	Tag      string
 }
 
+var skipFields = []string{"id", "created_at", "updated_at", "deleted_at"}
+
 func ParseSQL(sql string) (*Table, error) {
 	table := &Table{}
 	fields := []Field{}
@@ -63,6 +65,9 @@ func ParseSQL(sql string) (*Table, error) {
 			}
 		} else {
 			field := getField(line)
+			if SliceContain(skipFields, field.Name) {
+				continue
+			}
 			field.Tag = generateStructTag(field)
 			fields = append(fields, field)
 		}

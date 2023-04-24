@@ -48,7 +48,7 @@ func main() {
 	}
 
 	// 将生成的代码写入文件
-	if err := ioutil.WriteFile(fmt.Sprintf("%s.go", strings.ToLower(table.Name)), formattedCode, 0644); err != nil {
+	if err := ioutil.WriteFile(fmt.Sprintf("model/%s.go", strings.ToLower(table.Name)), formattedCode, 0644); err != nil {
 		fmt.Println("failed to write code to file:", err)
 		return
 	}
