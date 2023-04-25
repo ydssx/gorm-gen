@@ -11,6 +11,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/fatih/color"
 	"gopkg.in/yaml.v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -106,6 +107,6 @@ func generate(createSQL, outPath string) {
 		fmt.Println("failed to write code to file:", err)
 		return
 	}
-
-	fmt.Printf("[table %s]:code generation succeeded!\n", table.Name)
+	s := color.BlueString("[table %s]", table.Name)
+	fmt.Printf("%s:code generation succeeded!\n", s)
 }
