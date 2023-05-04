@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -103,7 +104,8 @@ func generate(createSQL, outPath string) {
 	}
 
 	// 将生成的代码写入文件
-	if err := ioutil.WriteFile(fmt.Sprintf("%s/%s.go", outPath, strings.ToLower(table.Name)), formattedCode, 0644); err != nil {
+	filename := filepath.Join(outPath, strings.ToLower(table.Name)+".go")
+	if err := ioutil.WriteFile(filename, formattedCode, 0644); err != nil {
 		fmt.Println("failed to write code to file:", err)
 		return
 	}
