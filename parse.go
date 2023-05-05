@@ -45,7 +45,7 @@ func ParseSQL(sql string) (*Table, error) {
 	lines := strings.Split(sql, "\n")
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "CREATE TABLE") || strings.HasPrefix(line, "KEY") || strings.HasPrefix(line, ")") {
+		if strings.HasPrefix(line, "CREATE TABLE") || strings.HasPrefix(line, "KEY") || strings.HasPrefix(line, ")") || strings.HasPrefix(line, "CONSTRAINT") {
 			continue
 		} else if strings.HasPrefix(line, ") ENGINE=") {
 			break
