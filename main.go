@@ -7,6 +7,7 @@ import (
 	"go/format"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -82,10 +83,11 @@ func generate(createSQL, outPath string) {
 		log.Print("failed to parse sql:", err)
 		return
 	}
-	modelTemplate, _ := ioutil.ReadFile("model.tmpl")
+
+	// modelTemplate, _ := ioutil.ReadFile("model.tmpl")
 	funcMap := template.FuncMap{"Title": strings.Title, "Lower": toLowerFirst, "CamelCase": UnderscoreToCamelCase}
 	// 解析模板
-	tmpl, err := template.New("model").Funcs(funcMap).Parse(string(modelTemplate))
+	tmpl, err := template.New("model").Funcs(funcMap).Parse(getTemplate())
 	if err != nil {
 		fmt.Println("failed to parse template:", err)
 		return
@@ -110,15 +112,28 @@ func generate(createSQL, outPath string) {
 		fmt.Println("failed to format code:", err)
 		return
 	}
-	log.Print(buf.String())
+	
 	// 将生成的代码写入文件
 	filename := filepath.Join(outPath, strings.ToLower(table.Name)+".go")
-	log.Print("filepath:" + filename)
-	log.Print("code:" + string(formattedCode))
 	if err := ioutil.WriteFile(filename, formattedCode, 0644); err != nil {
 		fmt.Println("failed to write code to file:", err)
 		return
 	}
 	s := color.BlueString("[table %s]", table.Name)
 	fmt.Printf("%s:code generation succeeded!\n", s)
+}
+
+func getTemplate() string {
+	url := "https://raw.githubusercontent.com/ydssx/gorm-gen/master/model.tmpl"
+	resp, err := http.Get(url)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+	return string(body)
 }
