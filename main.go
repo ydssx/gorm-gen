@@ -45,8 +45,17 @@ func main() {
 		log.Fatalf("failed to parse config file: %v", err)
 	}
 
-	if !DirExists(config.Output) {
-		os.MkdirAll(config.Output, 0755)
+	// 获取绝对路径
+	absPath, err := filepath.Abs(config.Output)
+	if err != nil {
+		panic(fmt.Errorf("failed to get absolute path: %s", err))
+	}
+
+	// 如果目录不存在，创建目录
+	if _, err := os.Stat(absPath); os.IsNotExist(err) {
+		if err := os.MkdirAll(absPath, 0755); err != nil {
+			panic(fmt.Errorf("failed to create directory: %s", err))
+		}
 	}
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.DataBase.Username, config.DataBase.Password, config.DataBase.Host, config.DataBase.Port, config.DataBase.Name)
@@ -63,7 +72,7 @@ func main() {
 			log.Fatalf("failed to get sql: %v", err)
 		}
 
-		generate(createSQL, config.Output)
+		generate(createSQL, absPath)
 	}
 }
 
