@@ -82,7 +82,6 @@ func generate(createSQL, outPath string) {
 		log.Print("failed to parse sql:", err)
 		return
 	}
-
 	modelTemplate, _ := ioutil.ReadFile("model.tmpl")
 	funcMap := template.FuncMap{"Title": strings.Title, "Lower": toLowerFirst, "CamelCase": UnderscoreToCamelCase}
 	// 解析模板
@@ -111,7 +110,7 @@ func generate(createSQL, outPath string) {
 		fmt.Println("failed to format code:", err)
 		return
 	}
-
+	log.Print(buf.String())
 	// 将生成的代码写入文件
 	filename := filepath.Join(outPath, strings.ToLower(table.Name)+".go")
 	log.Print("filepath:" + filename)
