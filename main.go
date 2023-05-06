@@ -114,6 +114,8 @@ func generate(createSQL, outPath string) {
 
 	// 将生成的代码写入文件
 	filename := filepath.Join(outPath, strings.ToLower(table.Name)+".go")
+	log.Print("filepath:" + filename)
+	log.Print("code:" + string(formattedCode))
 	if err := ioutil.WriteFile(filename, formattedCode, 0644); err != nil {
 		fmt.Println("failed to write code to file:", err)
 		return
