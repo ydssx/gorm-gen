@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	_ "embed"
 	"flag"
 	"fmt"
 	"go/format"
@@ -30,6 +31,9 @@ type Config struct {
 	Output string   `yaml:"output"`
 	Tables []string `yaml:"tables"`
 }
+
+//go:embed model.tmpl
+var modelTmp string
 
 func main() {
 	var configFile string
@@ -87,7 +91,7 @@ func generate(createSQL, outPath string) {
 	// modelTemplate, _ := ioutil.ReadFile("model.tmpl")
 	funcMap := template.FuncMap{"Title": strings.Title, "Lower": toLowerFirst, "CamelCase": UnderscoreToCamelCase}
 	// 解析模板
-	tmpl, err := template.New("model").Funcs(funcMap).Parse(getTemplate())
+	tmpl, err := template.New("model").Funcs(funcMap).Parse(modelTmp)
 	if err != nil {
 		fmt.Println("failed to parse template:", err)
 		return
@@ -98,6 +102,7 @@ func generate(createSQL, outPath string) {
 		"TableComment": table.Comment,
 		"Fields":       table.Fields,
 		"Name":         GetSingularTableName(table.Name),
+		"PrimaryKey":   findPrimaryKey(*table),
 	}
 	// 将模板应用到数据上，生成代码
 	var buf bytes.Buffer
@@ -112,7 +117,7 @@ func generate(createSQL, outPath string) {
 		fmt.Println("failed to format code:", err)
 		return
 	}
-	
+
 	// 将生成的代码写入文件
 	filename := filepath.Join(outPath, strings.ToLower(table.Name)+".go")
 	if err := ioutil.WriteFile(filename, formattedCode, 0644); err != nil {

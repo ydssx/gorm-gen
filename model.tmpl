@@ -2,9 +2,8 @@ package models
 
 import "gorm.io/gorm"
 
-// {{.TableName}} {{.TableComment}}
+// table {{.TableName}} {{.TableComment}}
 type {{.Name | Title}} struct {
-	BaseModel
 	{{range .Fields}}{{.Name | Title | CamelCase}} {{.Type}} {{.Tag}} {{if .Comment}}// {{.Comment}}{{end}}
 	{{end}}
 }
@@ -17,7 +16,7 @@ func New{{.Name | Title}}Model(tx ...*gorm.DB) *{{.Name | Lower}}Model {
 }
 
 func (m *{{.Name | Lower}}Model) SetIds(ids ...uint) *{{.Name | Lower}}Model {
-	m.db = m.db.Where("id IN (?)", ids)
+	m.db = m.db.Where("{{.PrimaryKey}} IN (?)", ids)
 	return m
 }
 

@@ -52,7 +52,7 @@ func ParseSQL(sql string) (*Table, error) {
 		} else if strings.HasPrefix(line, "PRIMARY KEY") {
 			pk := getPrimaryKey(line)
 			for i, f := range fields {
-				if f.Name == pk {
+				if SliceContain(pk, f.Name) {
 					fields[i].Primary = true
 				}
 			}
@@ -65,9 +65,9 @@ func ParseSQL(sql string) (*Table, error) {
 			}
 		} else {
 			field := getField(line)
-			if SliceContain(skipFields, field.Name) {
-				continue
-			}
+			// if SliceContain(skipFields, field.Name) {
+			// 	continue
+			// }
 			field.Tag = generateStructTag(field)
 			fields = append(fields, field)
 		}
@@ -91,10 +91,12 @@ func getTableComment(line string) string {
 	return comment
 }
 
-func getPrimaryKey(line string) string {
+func getPrimaryKey(line string) []string {
 	start := strings.Index(line, "(") + 1
 	end := strings.Index(line, ")")
-	return line[start:end]
+	x := line[start:end]
+	x = strings.ReplaceAll(x, "`", "")
+	return strings.Split(x, ",")
 }
 
 func getIndex(line string) string {
@@ -173,4 +175,13 @@ func ParseSQL1(sql string) (*Table, error) {
 		table.Fields = append(table.Fields, field)
 	}
 	return table, nil
+}
+
+func findPrimaryKey(table Table) string {
+	for _, v := range table.Fields {
+		if v.Primary {
+			return v.Name
+		}
+	}
+	return ""
 }
