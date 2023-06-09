@@ -1,7 +1,9 @@
 package main
 
 import (
+	"math"
 	"os"
+	"strconv"
 	"strings"
 	"unicode"
 
@@ -30,6 +32,17 @@ func getType(token string) string {
 	default:
 		return token
 	}
+}
+
+func pareDefaultValue(ftype, fval string) (v interface{}) {
+	switch ftype {
+	case "int64", "int", "int32":
+		v, _ = strconv.ParseInt(fval, 10, 64)
+	case "float64", "float32":
+		vf, _ := strconv.ParseFloat(fval, 64)
+		v = math.Round(vf*100) / 100
+	}
+	return
 }
 
 func GetSingularTableName(tableName string) string {

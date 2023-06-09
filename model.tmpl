@@ -15,6 +15,11 @@ func New{{.Name | Title}}Model(tx *gorm.DB) *{{.Name | Lower}}Model {
 	return &{{.Name | Lower}}Model{db: db}
 }
 
+func (m *{{.Name | Lower}}Model) Clone() *{{.Name | Lower}}Model {
+	m.db = cloneDB(m.db)
+	return m
+}
+
 func (m *{{.Name | Lower}}Model) SetIds(ids ...uint) *{{.Name | Lower}}Model {
 	m.db = m.db.Where("{{.PrimaryKey}} IN (?)", ids)
 	return m

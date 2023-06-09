@@ -19,7 +19,7 @@ type Field struct {
 	Primary  bool
 	Unique   bool
 	Nullable bool
-	Default  string
+	Default  interface{}
 	Comment  string
 	Tag      string
 }
@@ -118,7 +118,8 @@ func getField(line string) Field {
 	}
 	if strings.Contains(line, "DEFAULT") {
 		start := strings.Index(line, "DEFAULT ") + 8
-		field.Default = strings.TrimRight(strings.Split(line[start:], " ")[0], ",")
+		fval := strings.TrimRight(strings.Split(line[start:], " ")[0], ",")
+		field.Default = pareDefaultValue(field.Type, fval)
 	}
 	if strings.Contains(line, "COMMENT") {
 		start := strings.Index(line, "COMMENT '") + 9
@@ -141,8 +142,8 @@ func generateStructTag(field Field) (tag string) {
 		if !field.Nullable {
 			tags = append(tags, "not null")
 		}
-		if field.Default != "" {
-			tags = append(tags, fmt.Sprintf("default:%s", field.Default))
+		if field.Default != "" && field.Default != nil {
+			tags = append(tags, fmt.Sprintf("default:%v", field.Default))
 		}
 		tag += fmt.Sprintf("`json:\"%s\" gorm:\"%s\"`", field.Name, strings.Join(tags, ";"))
 	}
