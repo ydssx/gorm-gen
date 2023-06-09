@@ -10,8 +10,8 @@ type {{.Name | Title}} struct {
 
 type {{.Name | Lower}}Model DB
 
-func New{{.Name | Title}}Model(tx ...*gorm.DB) *{{.Name | Lower}}Model {
-	db := getDB(tx...).Table("{{.TableName}}").Model(&{{.Name | Title}}{})
+func New{{.Name | Title}}Model(tx *gorm.DB) *{{.Name | Lower}}Model {
+	db := tx.Table("{{.TableName}}").Model(&{{.Name | Title}}{})
 	return &{{.Name | Lower}}Model{db: db}
 }
 
@@ -22,6 +22,11 @@ func (m *{{.Name | Lower}}Model) SetIds(ids ...uint) *{{.Name | Lower}}Model {
 
 func (m *{{.Name | Lower}}Model) Order(expr string) *{{.Name | Lower}}Model {
 	m.db = m.db.Order(expr)
+	return m
+}
+
+func (m *{{.Name | Lower}}Model) Select(fields ...string) *{{.Name | Lower}}Model {
+	m.db = m.db.Select(fields)
 	return m
 }
 
