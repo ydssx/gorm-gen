@@ -17,7 +17,7 @@ func getType(token string) string {
 		return "int"
 	case strings.HasPrefix(token, "tinyint(1)"):
 		return "bool"
-	case strings.HasPrefix(token, "varchar"), strings.HasPrefix(token, "text"), strings.HasPrefix(token, "char"):
+	case strings.HasPrefix(token, "varchar"), strings.HasPrefix(token, "text"), strings.HasPrefix(token, "char"), strings.HasPrefix(token, "longtext"):
 		return "string"
 	case strings.HasPrefix(token, "decimal"), strings.HasPrefix(token, "double"):
 		return "float64"
