@@ -68,9 +68,12 @@ func ParseSQL(sql string) (*Table, error) {
 			// if SliceContain(skipFields, field.Name) {
 			// 	continue
 			// }
-			field.Tag = generateStructTag(field)
+			// field.Tag = generateStructTag(field)
 			fields = append(fields, field)
 		}
+	}
+	for i, field := range fields {
+		fields[i].Tag = generateStructTag(field)
 	}
 	table.Fields = fields
 	return table, nil
@@ -132,21 +135,20 @@ func getField(line string) Field {
 // 生成模型tag
 func generateStructTag(field Field) (tag string) {
 	// fieldStr := fmt.Sprintf("%s %s", field.Name, field.Type)
+	tags := []string{fmt.Sprintf("column:%s", field.Name)}
 	if field.Primary {
-		tag += " `gorm:\"primaryKey\"`"
-	} else {
-		tags := []string{fmt.Sprintf("column:%s", field.Name)}
-		if field.Unique {
-			tags = append(tags, "unique")
-		}
-		if !field.Nullable {
-			tags = append(tags, "not null")
-		}
-		if field.Default != "" && field.Default != nil {
-			tags = append(tags, fmt.Sprintf("default:%v", field.Default))
-		}
-		tag += fmt.Sprintf("`json:\"%s\" gorm:\"%s\"`", field.Name, strings.Join(tags, ";"))
+		tags = append(tags, "primaryKey")
 	}
+	if field.Unique {
+		tags = append(tags, "unique")
+	}
+	if !field.Nullable {
+		tags = append(tags, "not null")
+	}
+	if field.Default != "" && field.Default != nil {
+		tags = append(tags, fmt.Sprintf("default:%v", field.Default))
+	}
+	tag += fmt.Sprintf("`json:\"%s\" gorm:\"%s\"`", field.Name, strings.Join(tags, ";"))
 	return tag
 }
 

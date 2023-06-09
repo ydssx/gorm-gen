@@ -35,6 +35,9 @@ func getType(token string) string {
 }
 
 func pareDefaultValue(ftype, fval string) (v interface{}) {
+	if strings.ToLower(fval) == "null" {
+		return fval
+	}
 	switch ftype {
 	case "int64", "int", "int32":
 		v, _ = strconv.ParseInt(fval, 10, 64)
