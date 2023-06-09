@@ -41,6 +41,8 @@ func pareDefaultValue(ftype, fval string) (v interface{}) {
 	case "float64", "float32":
 		vf, _ := strconv.ParseFloat(fval, 64)
 		v = math.Round(vf*100) / 100
+	default:
+		return fval
 	}
 	return
 }
