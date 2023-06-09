@@ -53,8 +53,8 @@ func (m *{{.Name | Lower}}Model) LastOne() (data {{.Name | Title}}, err error) {
 	return
 }
 
-func (m *{{.Name | Lower}}Model) DeleteById(id int) error {
-	return m.db.Where("id = ?", id).Delete(&{{.Name | Title}}{}).Error
+func (m *{{.Name | Lower}}Model) DeleteByPrimKey(key interface{}) error {
+	return m.db.Where("{{.PrimaryKey}} = ?", key).Delete(&{{.Name | Title}}{}).Error
 }
 
 func (m *{{.Name | Lower}}Model) List() (data []{{.Name | Title}}) {
