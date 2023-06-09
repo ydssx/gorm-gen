@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"gorm.io/gorm"
@@ -6,7 +6,7 @@ import (
 )
 
 type BaseModel struct {
-	ID        uint  `json:"id" gorm:"primary_key"`
+	ID        uint  `json:"id" gorm:"primaryKey"`
 	CreatedAt int64 `json:"created_at"`
 	UpdatedAt int64 `json:"updated_at"`
 	DeletedAt int64 `json:"deleted_at"`

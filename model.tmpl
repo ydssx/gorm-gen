@@ -1,11 +1,15 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"context"
+
+	"gorm.io/gorm"
+)
 
 // table {{.TableName}} {{.TableComment}}
 type {{.Name | Title}} struct {
 	{{range .Fields}}{{.Name | Title | CamelCase}} {{.Type}} {{.Tag}} {{if .Comment}}// {{.Comment}}{{end}}
-	{{end}}
+	{{end -}}
 }
 
 type {{.Name | Lower}}Model DB
@@ -35,6 +39,11 @@ func (m *{{.Name | Lower}}Model) Select(fields ...string) *{{.Name | Lower}}Mode
 	return m
 }
 
+func (m *{{.Name | Lower}}Model) WithContext(ctx context.Context) *{{.Name | Lower}}Model {
+	m.db = m.db.WithContext(ctx)
+	return m
+}
+
 func (m *{{.Name | Lower}}Model) Create({{.Name | Lower}} {{.Name | Title | Title}}) error {
 	return m.db.Create(&{{.Name | Lower}}).Error
 }
@@ -54,7 +63,7 @@ func (m *{{.Name | Lower}}Model) LastOne() (data {{.Name | Title}}, err error) {
 }
 
 func (m *{{.Name | Lower}}Model) DeleteByPrimKey(key interface{}) error {
-	return m.db.Where("{{.PrimaryKey}} = ?", key).Delete(&{{.Name | Title}}{}).Error
+	return m.db.Where("{{.PrimaryKey}} IN (?)", key).Delete(&{{.Name | Title}}{}).Error
 }
 
 func (m *{{.Name | Lower}}Model) List() (data []{{.Name | Title}}) {
