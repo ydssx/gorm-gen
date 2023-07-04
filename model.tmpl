@@ -24,7 +24,7 @@ func (m *{{.Name | Lower}}Model) Clone() *{{.Name | Lower}}Model {
 	return m
 }
 
-func (m *{{.Name | Lower}}Model) SetIds(ids ...uint) *{{.Name | Lower}}Model {
+func (m *{{.Name | Lower}}Model) SetIds(ids ...int64) *{{.Name | Lower}}Model {
 	m.db = m.db.Where("{{.PrimaryKey}} IN (?)", ids)
 	return m
 }

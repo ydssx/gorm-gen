@@ -69,7 +69,10 @@ func main() {
 		// 处理连接错误
 		log.Fatalf("failed to connect database: %v", err)
 	}
-
+	
+	if SliceContain(config.Tables, "*") {
+		config.Tables, _ = db.Migrator().GetTables()
+	}
 	for _, tableName := range config.Tables {
 		var createSQL string
 		if err := db.Raw("SHOW CREATE TABLE "+tableName).Row().Scan(&tableName, &createSQL); err != nil {
@@ -120,6 +123,11 @@ func generate(createSQL, outPath string) {
 
 	// 将生成的代码写入文件
 	filename := filepath.Join(outPath, strings.ToLower(table.Name)+".go")
+	if FileExist(filename) {
+		msg := color.YellowString("file %s already exists, skipped.", filename)
+		fmt.Println(msg)
+		return
+	}
 	if err := ioutil.WriteFile(filename, formattedCode, 0644); err != nil {
 		fmt.Println("failed to write code to file:", err)
 		return
