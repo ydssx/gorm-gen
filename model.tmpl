@@ -72,7 +72,7 @@ func (m *{{.Name | Lower}}Model) List() (data []{{.Name | Title}}) {
 }
 
 func (m *{{.Name | Lower}}Model) PageList(limit, offset int) (data []{{.Name | Title}}, total int64, err error) {
-	query := m.db.Model(&{{.Name | Title}}{})
+	query := m.db
 	err = query.Count(&total).Error
 	if err != nil {
 		return nil, 0, err
