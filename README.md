@@ -4,7 +4,7 @@
 
 ## Installation
 
-You can install `gorm-gen` using `go get`:
+You can install `gorm-gen` using `go install`:
 
 ```bash
 go install github.com/ydssx/gorm-gen@latest
