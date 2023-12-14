@@ -52,12 +52,12 @@ func (m *{{.Name | Lower}}Model) Updates(values interface{}) error {
 	return m.db.Updates(values).Error
 }
 
-func (m *{{.Name | Lower}}Model) FirstOne() (data {{.Name | Title}}, err error) {
+func (m *{{.Name | Lower}}Model) FirstOne() (data *{{.Name | Title}}, err error) {
 	err = m.db.Take(&data).Error
 	return
 }
 
-func (m *{{.Name | Lower}}Model) LastOne() (data {{.Name | Title}}, err error) {
+func (m *{{.Name | Lower}}Model) LastOne() (data *{{.Name | Title}}, err error) {
 	err = m.db.Last(&data).Error
 	return
 }
@@ -79,4 +79,8 @@ func (m *{{.Name | Lower}}Model) PageList(limit, offset int) (data []{{.Name | T
 	}
 	err = query.Limit(limit).Offset(offset).Find(&data).Error
 	return
+}
+
+func (m *{{.Name | Lower}}Model) Delete() error {
+	return m.db.Delete(&{{.Name | Title}}{}).Error
 }
